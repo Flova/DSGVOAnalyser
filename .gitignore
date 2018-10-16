@@ -1,5 +1,6 @@
 *.json
 *.jpeg
+*.pyc
 Jodel/
 Google/
 Snap/
