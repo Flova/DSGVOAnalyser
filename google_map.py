@@ -41,13 +41,13 @@ class GoogleLoc():
         print("Data parsed and loaded in memory")
         return latA, lonA
 
-    def plot(self, latA, lonA, m):
-        x, y = m(lonA, latA)
-        m.plot(x, y, 'o-', markersize=5, linewidth=1) 
+    def plot(self, latA, lonA):
+        x, y = self.map(lonA, latA)
+        self.map.plot(x, y, 'o-', markersize=5, linewidth=1) 
         print("Gernerated lines")
 
     def run(self):
-        self.plot(*self.converter(self.locations), self.map)
+        self.plot(*self.converter(self.locations))
 
 if __name__ == "__main__":
     worker = GoogleLoc()
