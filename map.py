@@ -24,7 +24,7 @@ class SnapLoc():
                     resolution=None,
                     width=6E6, height=6E6, 
                     lat_0=53, lon_0=9,)
-        # m.bluemarble()
+        m.bluemarble()
         self.map = m
         print("Map loaded")
 
