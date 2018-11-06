@@ -3,13 +3,13 @@ import os
 import json
 import sys
 
-result = list()
+result = {}
 
 def concat(path, file):
     with open(path + file) as f:
         data = json.load(f)
     partner = file.replace("WhatsApp Chat mit ", "")[:-5]
-    result.append({'partner': partner, 'chat': data})
+    result[partner] = data
 
 
 def concat_folder(path):
