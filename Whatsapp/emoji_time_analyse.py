@@ -6,10 +6,11 @@ import time
 import emoji
 import re
 import operator
+import matplotlib.pyplot as plt
 from datetime import datetime
 from collections import Counter
-import matplotlib.pyplot as plt
 from progressbar import ProgressBar
+from tabulate import tabulate
 
 
 # Search in single chat
@@ -24,6 +25,7 @@ def analyse_chat(messages):
 
 me = "Florian Vahl"
 only_me = True
+size = 15
 
 blacklist = ["Bosshood👍👌",]
 
@@ -58,9 +60,9 @@ for chat in pbar(chats):
 
 for month, value in enumerate(months):
     temp_histogram = Counter(value)
-    reduced_histogram = dict(temp_histogram.most_common(10))
+    reduced_histogram = dict(temp_histogram.most_common(size))
     months[month] = reduced_histogram
 
-for month, value in enumerate(months):
-    str_month = datetime.utcfromtimestamp(chat_time[0] + month * month_in_s).strftime('%b %y')
-    print("{}: {}".format(str_month, str(value)))
+lables = [[datetime.utcfromtimestamp(chat_time[0] + month * month_in_s).strftime('%b %y')] for month, value in enumerate(months)]
+
+print(tabulate([lables[month] + list(value) for month, value in enumerate(months)], headers=["Monat"] + ["Platz {}.".format(i) for i in range(1, size + 1)]))
