@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-partner = "Jana"
+partner = "Ass 'ies 🔶♥♠♣+  Joker🃏"
 me = "Florian Vahl"
 
 with open("output.json") as f:
@@ -57,36 +57,6 @@ def plot_chat_freq():
     for x, y in zip(xs, ys):
         if y > 0:
             plt.annotate(y, xy = (x, y))
-    plt.show()
-
-def plot_each_chat_freq():
-    months = ([0]*(month_count), [0]*(month_count))
-
-    # Counts messages for each month
-    for message in messages:
-        message_time = time.mktime(datetime.strptime(message["time"], '%Y-%m-%dT%H:%M:%S').timetuple())
-        month = int(round((message_time - chat_time[0])/month_in_s, 0))
-        if message["author"] == me:
-            months[0][month] += 1
-        else:
-            months[1][month] += 1
-
-    # Converts values for plotting
-    ys = months
-    xs = list(range(0, month_count))
-    plt.figure(figsize=(10,8))
-    plt.title("Chat mit {}".format(partner), fontsize=20)
-    plt.xlabel('Month', fontsize=15)
-    plt.ylabel('Messages', fontsize=15)
-    plt.xticks(xs, lables, rotation='vertical')
-    plt.margins(0.01)
-    plt.plot(xs, ys[0], 'bo', xs, ys[0], 'k')
-    plt.plot(xs, ys[1], 'bo', xs, ys[1], 'r--')
-    for x, y1, y2 in zip(xs, ys[0], ys[1]):
-        if y1 > 0:
-            plt.annotate(y1, xy = (x, y1))
-        if y2 > 0:
-            plt.annotate(y2, xy = (x, y2))
     plt.show()
 
 def plot_each_chat_freq():
