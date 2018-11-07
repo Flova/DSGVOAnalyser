@@ -22,27 +22,17 @@ average_values = []
 
 def calc(chat_partner):
     chat = chats[chat_partner]
-    if chat[0]["author"] == me:
-        mode = True
-    else:
-        mode = False 
     diff = [1,1]
 
     for index, message in enumerate(chat):
-        last_mode = mode
-        if message["author"] == me:
-            mode = True
-        else:
-            mode = False
-        if mode != last_mode:
-            last = index - 1
-            if last > 0:
-                temp = to_timestamp(message["time"]) - to_timestamp(chat[last]["time"])
-                if temp > (threshold * 3600):
-                    if mode:
-                        diff[0] += 1
-                    else: 
-                        diff[1] += 1
+        last = index - 1
+        if last > 0:
+            temp = to_timestamp(message["time"]) - to_timestamp(chat[last]["time"])
+            if temp > (threshold * 3600):
+                if message["author"] == me:
+                    diff[0] += 1
+                else:
+                    diff[1] += 1
     # print("{} hat {} mal ein Gespräch angfangen | {} hat {} mal ein Gespräch angfangen".format(me, diff[0], chat_partner, diff[1]))
     return round(diff[0] - diff[1]) / (abs(diff[0]) + abs(diff[1]))
 
