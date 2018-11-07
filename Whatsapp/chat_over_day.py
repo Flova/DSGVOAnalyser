@@ -8,15 +8,23 @@ import matplotlib.pyplot as plt
 
 me = "Florian Vahl"
 only_me = True
+chat_partner = ""
 
 with open("output.json") as f:
     chats = json.load(f)
 
 day = [0]*24
-for chat in chats:
+
+def count(chat):
     for message in chats[chat]:
         if not(only_me) or message["author"] == me:
             day[int(datetime.strptime(message["time"], '%Y-%m-%dT%H:%M:%S').strftime('%H'))] += 1
+
+if chat_partner == "":
+    for chat in chats:
+        count(chat)
+else:
+    count(chat_partner)
 
 lables = []
 for hour, value in enumerate(day):
