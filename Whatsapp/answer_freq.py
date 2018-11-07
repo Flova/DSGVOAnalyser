@@ -22,7 +22,10 @@ average_values = []
 
 def calc(chat_partner):
     chat = chats[chat_partner]
-    mode = False
+    if chat[0]["author"] == me:
+        mode = True
+    else:
+        mode = False 
     diff = ([],[])
 
     for index, message in enumerate(chat):
@@ -42,7 +45,7 @@ def calc(chat_partner):
                         diff[1].append(temp)
     
     result = (round(mean(diff[0])/60), round(mean(diff[1])/60))
-    print("{}: {} Minuten | {}: {} Minuten".format(me, result[0], chat_partner, result[1]))
+    # print("{}: {} Minuten | {}: {} Minuten".format(me, result[0], chat_partner, result[1]))
     return result
 
 data = {}
