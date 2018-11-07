@@ -89,7 +89,7 @@ def plot_each_chat_freq():
             plt.annotate(y2, xy = (x, y2))
     plt.show()
 
-    def plot_each_chat_freq():
+def plot_each_chat_freq():
     months = ([0]*(month_count), [0]*(month_count))
 
     # Counts messages for each month

@@ -9,7 +9,6 @@ import operator
 from datetime import datetime
 from collections import Counter
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
 
 
 # Search in single chat
