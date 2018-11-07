@@ -39,8 +39,10 @@ reduced_histogram = histogram.most_common(20)
 
 reduced_histogram = dict(reduced_histogram)
 
-plt.figure(figsize=(10,9))
-plt.title("Emoji 😂👍 counter ", fontsize=20)
+plt.figure(figsize=(10,6))
+plt.title("Emoji counter ", fontsize=20)
 plt.margins(0.01)
-plt.bar(reduced_histogram.keys(), reduced_histogram.values())
+plt.bar([emoji.demojize(e) for e in reduced_histogram.keys()], reduced_histogram.values())
+plt.xticks(rotation=90)
+plt.tight_layout()
 plt.show()
