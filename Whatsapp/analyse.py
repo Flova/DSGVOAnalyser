@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 
 
 class WhatsappAnalyseFreq():
-    def __init__(self, partner="Jana", me="Florian Vahl"):
+    def __init__(self, file="output.json", partner="Jana", me="Florian Vahl"):
 
         self.partner = partner
         self.me = me
 
-        with open("output.json") as f:
+        with open(file) as f:
             self.messages = json.load(f)[self.partner]
 
         counter = 0
