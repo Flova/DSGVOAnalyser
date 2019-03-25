@@ -8,13 +8,13 @@ from statistics import mean
 import matplotlib.pyplot as plt
 
 class WhatsappAnswerFreq():
-    def __init__(self, partner="", me="Florian Vahl", blacklist=["!Bosshood👍👌",]):
+    def __init__(self, file="output.json", partner="", me="Florian Vahl", blacklist=["!Bosshood👍👌",]):
         self.me = me
         self.partner = partner
         self.threshold = 3 #Stunden
         self.blacklist = blacklist
 
-        with open("output.json") as f:
+        with open(file) as f:
             self.chats = json.load(f)
 
         self.average_values = []
