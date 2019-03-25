@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-partner = "Ass 'ies 🔶♥♠♣+  Joker🃏"
+partner = "Jana"
 me = "Florian Vahl"
 
 with open("output.json") as f:
