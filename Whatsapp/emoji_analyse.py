@@ -11,37 +11,46 @@ from collections import Counter
 import matplotlib.pyplot as plt
 
 
-# Search in single chat
-def analyse_chat(messages):
-    emoji_list = list()
-    for message in messages:
-        for character in message["message"]:
-             if character in emoji.UNICODE_EMOJI:
-                 emoji_list.append(character)
-    return emoji_list
+class WhatsappEmojiAnalyse():
+    def __init__(self, file="output.json", me="Florian Vahl", blacklist=["!Bosshood👍👌",]):
+    
+        self.me = me
+        self.blacklist = blacklist
+    
+        with open(file) as f:
+            self.chats = json.load(f)
+    
+    def plot(self):
+        # Search in all chats
+        result = list()
+        for chat in self.chats:
+            if chat not in self.blacklist:
+                result.extend(self.analyse_chat(self.chats[chat]))
 
-me = "Florian Vahl"
+        histogram = Counter(result)
+        reduced_histogram = histogram.most_common(20)
 
-blacklist = ["Bosshood👍👌",]
+        reduced_histogram = dict(reduced_histogram)
 
-with open("output.json") as f:
-    chats = json.load(f)
+        plt.figure(figsize=(10,6))
+        plt.title("Emoji counter", fontsize=20)
+        plt.margins(0.01)
+        plt.bar([emoji.demojize(e) for e in reduced_histogram.keys()], reduced_histogram.values())
+        plt.xticks(rotation=90)
+        plt.tight_layout()
+        plt.show()
 
-# Search in all chats
-result = list()
-for chat in chats:
-    if chat not in blacklist:
-        result.extend(analyse_chat(chats[chat]))
+     # Search in single chat
+    def analyse_chat(self, messages):
+        emoji_list = list()
+        for message in messages:
+            if message["author"] == self.me:
+                for character in message["message"]:
+                    if character in emoji.UNICODE_EMOJI:
+                        emoji_list.append(character)
+        return emoji_list
 
-histogram = Counter(result)
-reduced_histogram = histogram.most_common(20)
 
-reduced_histogram = dict(reduced_histogram)
-
-plt.figure(figsize=(10,6))
-plt.title("Emoji counter", fontsize=20)
-plt.margins(0.01)
-plt.bar([emoji.demojize(e) for e in reduced_histogram.keys()], reduced_histogram.values())
-plt.xticks(rotation=90)
-plt.tight_layout()
-plt.show()
+if __name__ == "__main__":
+    tool = WhatsappEmojiAnalyse()
+    tool.plot()
