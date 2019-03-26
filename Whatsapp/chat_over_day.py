@@ -18,7 +18,7 @@ class WhatsappChatOverDay():
         self.day = [0]*24
 
     def count(self, chat):
-        for message in chats[chat]:
+        for message in self.chats[chat]:
             if not(self.only_me) or message["author"] == self.me:
                 self.day[int(datetime.strptime(message["time"], '%Y-%m-%dT%H:%M:%S').strftime('%H'))] += 1
 
@@ -30,7 +30,7 @@ class WhatsappChatOverDay():
             self.count(self.partner)
 
         lables = []
-        for hour, value in enumerate(day):
+        for hour, value in enumerate(self.day):
             lables.append(datetime.strptime(str(hour), '%H').strftime('%H:%M'))
 
         plt.figure(figsize=(10,6))

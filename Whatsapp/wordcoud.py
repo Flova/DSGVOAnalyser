@@ -6,6 +6,10 @@ import re
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
+'''
+This is still in development
+'''
+
 me = "Florian Vahl"
 only_me = True
 

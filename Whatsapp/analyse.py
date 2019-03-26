@@ -93,6 +93,10 @@ class WhatsappAnalyseFreq():
                 plt.annotate(y2, xy = (x, y2))
         plt.show()
 
+    def plot(self):
+        self.plot_chat_freq()
+        self.plot_each_chat_freq()
+
 if __name__ == "__main__":
     tool = WhatsappAnalyseFreq()
     tool.plot_chat_freq()
