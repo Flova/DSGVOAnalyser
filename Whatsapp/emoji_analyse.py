@@ -12,14 +12,30 @@ import matplotlib.pyplot as plt
 
 
 class WhatsappEmojiAnalyse():
-    def __init__(self, file="output.json", me="Florian Vahl", blacklist=["!Bosshood👍👌",]):
-    
+    def __init__(self, file="output.json", me="Florian Vahl", blacklist=None):
+        
         self.me = me
-        self.blacklist = blacklist
-    
+        
         with open(file) as f:
             self.chats = json.load(f)
-    
+
+        if blacklist is None:
+            self.blacklist = self.generate_groulist()
+        else:
+            self.blacklist = blacklist
+
+    def generate_groulist(self):
+            grouplist = set()
+            for chat in self.chats:
+                members = set()
+                for message in self.chats[chat]:
+                    if message["author"] is not None:
+                        members.add(message["author"])
+                    if len(members) > 2:
+                        grouplist.add(chat)
+                        break
+            return grouplist
+
     def plot(self):
         # Search in all chats
         result = list()

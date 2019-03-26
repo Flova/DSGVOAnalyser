@@ -14,11 +14,10 @@ from tabulate import tabulate
 
 
 class WhatsappEmojiTimeAnalyse():
-    def __init__(self, file="output.json", me="Florian Vahl", only_me=True, blacklist=["!Bosshood👍👌",], size=15):
+    def __init__(self, file="output.json", me="Florian Vahl", only_me=True, blacklist=None, size=15):
         self.me = me
         self.only_me = me
         self.size = size
-        self.blacklist = blacklist
 
         self.pbar = ProgressBar()
 
@@ -40,9 +39,28 @@ class WhatsappEmojiTimeAnalyse():
         self.month_in_s = (86400 * 30.4167)
         self.month_count = int(round(self.time_delta/self.month_in_s, 0)) + 1
         self.months = list()
+        
         for i in range(0, self.month_count):
             self.months.append(list())
+        
         print("List init")
+
+        if blacklist is None:
+            self.blacklist = self.generate_groulist()
+        else:
+            self.blacklist = blacklist
+
+    def generate_groulist(self):
+            grouplist = set()
+            for chat in self.chats:
+                members = set()
+                for message in self.chats[chat]:
+                    if message["author"] is not None:
+                        members.add(message["author"])
+                    if len(members) > 2:
+                        grouplist.add(chat)
+                        break
+            return grouplist
 
     # Search in single chat
     def analyse_chat(self, messages):

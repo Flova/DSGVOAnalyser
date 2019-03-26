@@ -8,22 +8,38 @@ from statistics import mean
 import matplotlib.pyplot as plt
 
 class WhatsappAnswerFreq():
-    def __init__(self, file="output.json", partner="", me="Florian Vahl", blacklist=["!Bosshood👍👌",]):
+    def __init__(self, file="output.json", partner="", me="Florian Vahl", blacklist=None):
         self.me = me
         self.partner = partner
         self.threshold = 3 #Stunden
-        self.blacklist = blacklist
 
         with open(file) as f:
             self.chats = json.load(f)
 
         self.average_values = []
 
+        if blacklist is None:
+            self.blacklist = self.generate_groulist()
+        else:
+            self.blacklist = blacklist
+
+    def generate_groulist(self):
+            grouplist = set()
+            for chat in self.chats:
+                members = set()
+                for message in self.chats[chat]:
+                    if message["author"] is not None:
+                        members.add(message["author"])
+                    if len(members) > 2:
+                        grouplist.add(chat)
+                        break
+            return grouplist
+
     def to_timestamp(self, date_string):
         return time.mktime(datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S').timetuple())
 
-    def calc(self, chat_partner):
-        chat = self.chats[chat_partner]
+    def calc(self, partner):
+        chat = self.chats[partner]
         if chat[0]["author"] == self.me:
             mode = True
         else:
@@ -47,7 +63,7 @@ class WhatsappAnswerFreq():
                             diff[1].append(temp)
         
         result = (round(mean(diff[0])/60), round(mean(diff[1])/60))
-        # print("{}: {} Minuten | {}: {} Minuten".format(me, result[0], chat_partner, result[1]))
+        # print("{}: {} Minuten | {}: {} Minuten".format(me, result[0], partner, result[1]))
         return result
 
     def plot(self):

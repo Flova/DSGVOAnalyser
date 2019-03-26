@@ -9,16 +9,32 @@ import matplotlib.pyplot as plt
 
 
 class WhatsappFirstStrike():
-    def __init__(self, file="output.json", me="Florian Vahl", partner="", blacklist=["!Bosshood👍👌",], threshold=24):
+    def __init__(self, file="output.json", me="Florian Vahl", partner="", blacklist=None, threshold=24):
         self.me = me
         self.partner = partner
         self.threshold = threshold
-        self.blacklist = blacklist
 
         with open(file) as f:
             self.chats = json.load(f)
 
         self.average_values = []
+
+        if blacklist is None:
+            self.blacklist = self.generate_groulist()
+        else:
+            self.blacklist = blacklist
+
+    def generate_groulist(self):
+            grouplist = set()
+            for chat in self.chats:
+                members = set()
+                for message in self.chats[chat]:
+                    if message["author"] is not None:
+                        members.add(message["author"])
+                    if len(members) > 2:
+                        grouplist.add(chat)
+                        break
+            return grouplist
 
     def to_timestamp(self, date_string):
         return time.mktime(datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S').timetuple())
