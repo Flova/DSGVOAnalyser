@@ -13,56 +13,63 @@ from progressbar import ProgressBar
 from tabulate import tabulate
 
 
-# Search in single chat
-def analyse_chat(messages):
-    for message in messages:
-        if not(only_me) or message["author"] == me:
-            timestamp = time.mktime(datetime.strptime(message["time"], '%Y-%m-%dT%H:%M:%S').timetuple())
-            for character in message["message"]:
-                if character in emoji.UNICODE_EMOJI:
-                    month = int(round((timestamp - chat_time[0])/month_in_s, 0))
-                    months[month].append(character)
+class WhatsappEmojiTimeAnalyse():
+    def __init__(self, file="output.json", me="Florian Vahl", only_me=True, blacklist=["!Bosshood👍👌",], size=15):
+        self.me = me
+        self.only_me = me
+        self.size = size
+        self.blacklist = blacklist
 
-me = "Florian Vahl"
-only_me = True
-size = 15
+        self.pbar = ProgressBar()
 
-blacklist = ["Bosshood👍👌",]
+        with open(file) as f:
+            self.chats = json.load(f)
 
-pbar = ProgressBar()
+        print("File loaded")
 
-with open("output.json") as f:
-    chats = json.load(f)
+        self.dates = []
+        for chat in self.chats:
+            for message in self.chats[chat]:
+                date = datetime.strptime(message["time"], '%Y-%m-%dT%H:%M:%S')
+                self.dates.append(time.mktime(date.timetuple()))
+        self.chat_time = (min(self.dates),max(self.dates))
+        print("Min/Max date found")
 
-print("File loaded")
+        # Calcs month step size
+        self.time_delta = abs(self.chat_time[0] - self.chat_time[1])
+        self.month_in_s = (86400 * 30.4167)
+        self.month_count = int(round(self.time_delta/self.month_in_s, 0)) + 1
+        self.months = list()
+        for i in range(0, self.month_count):
+            self.months.append(list())
+        print("List init")
 
-dates = []
-for chat in chats:
-    for message in chats[chat]:
-        date = datetime.strptime(message["time"], '%Y-%m-%dT%H:%M:%S')
-        dates.append(time.mktime(date.timetuple()))
-chat_time = (min(dates),max(dates))
-print("Min/Max date found")
+    # Search in single chat
+    def analyse_chat(self, messages):
+        for message in messages:
+            if not(self.only_me) or message["author"] == self.me:
+                timestamp = time.mktime(datetime.strptime(message["time"], '%Y-%m-%dT%H:%M:%S').timetuple())
+                for character in message["message"]:
+                    if character in emoji.UNICODE_EMOJI:
+                        month = int(round((timestamp - self.chat_time[0])/self.month_in_s, 0))
+                        self.months[month].append(character)
 
-# Calcs month step size
-time_delta = abs(chat_time[0] - chat_time[1])
-month_in_s = (86400 * 30.4167)
-month_count = int(round(time_delta/month_in_s, 0)) + 1
-months = list()
-for i in range(0, month_count):
-    months.append(list())
-print("List init")
+    def plot(self):
+        # Search in all chats
+        for chat in self.pbar(self.chats):
+            if chat not in self.blacklist:
+                self.analyse_chat(self.chats[chat])
 
-# Search in all chats
-for chat in pbar(chats):
-    if chat not in blacklist:
-        analyse_chat(chats[chat])
+        for month, value in enumerate(self.months):
+            temp_histogram = Counter(value)
+            reduced_histogram = dict(temp_histogram.most_common(self.size))
+            self.months[month] = reduced_histogram
 
-for month, value in enumerate(months):
-    temp_histogram = Counter(value)
-    reduced_histogram = dict(temp_histogram.most_common(size))
-    months[month] = reduced_histogram
+        lables = [[datetime.utcfromtimestamp(self.chat_time[0] + month * self.month_in_s).strftime('%b %y')] for month, value in enumerate(self.months)]
 
-lables = [[datetime.utcfromtimestamp(chat_time[0] + month * month_in_s).strftime('%b %y')] for month, value in enumerate(months)]
+        print(tabulate([lables[month] + list(value) for month, value in enumerate(self.months)], headers=["Monat"] + ["Platz {}.".format(i) for i in range(1, self.size + 1)]))
 
-print(tabulate([lables[month] + list(value) for month, value in enumerate(months)], headers=["Monat"] + ["Platz {}.".format(i) for i in range(1, size + 1)]))
+
+if __name__ == "__main__":
+    tool = WhatsappEmojiTimeAnalyse()
+    tool.plot()
