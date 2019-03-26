@@ -4,10 +4,10 @@ from mpl_toolkits.basemap import Basemap
 import json
 import numpy as np 
 
-with open('data.json') as f:
+with open('Snap/json/snap_history.json') as f:
     data = json.load(f)
 
-with open('friends.json') as f:
+with open('Snap/json/friends.json') as f:
     friends = json.load(f)["Friends"]
 
 f = dict()
