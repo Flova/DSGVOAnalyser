@@ -10,4 +10,8 @@
 - Für eine grobe Analyse kann dann das Script `whatsapp.py` aufgerufen werden.
 - Auch einzelne Module können aus `Whatsapp/` manuell gestartet oder in eigene Skripte eingebunden werden. 
 
+### Snap
+- Verschiebe den erhaltenen `Snap/` Ordner in den Git Ordner.
+- Führe das Skript `snap_names.py` aus. 
+
 ### TODO
